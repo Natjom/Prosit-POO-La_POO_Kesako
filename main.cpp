@@ -193,18 +193,5 @@ public:
 
 main(void)
 {
-    Point2 o1(1, 4);
-    Point2 o2(3, 8);
-
-    Vector2 d1(2, -8);
-    Vector2 d2(-2, 6);
-
-    Segment2 s1(o1, d1);
-    Segment2 s2(o2, d2);
-
-    Point2 satan(7, -2);
-
-    cout << s1.intersect(s2, satan) << endl;
-
     return 1;
 }
