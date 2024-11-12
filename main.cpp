@@ -3,7 +3,6 @@
 
 using std::cout;
 using std::endl;
-using std::string;
 
 typedef enum
 {
@@ -22,8 +21,9 @@ public:
     float x;
     float y;
 
-    Point2(float x = 0, float y = 0) : x(x), y(y) {}
-
+    Point2() : x(0), y(0) {}
+    Point2(float x, float y) : x(x), y(y) {}
+    Point2(Point2 *p) : x(p->x), y(p->y) {}
     ~Point2() {}
 
     float getX() { return x; }
@@ -42,65 +42,25 @@ public:
     float x;
     float y;
 
-    Vector2(float x = 0, float y = 0) : x(x), y(y) {}
-
+    Vector2() : x(0), y(0) {}
+    Vector2(float x, float y) : x(x), y(y) {}
+    Vector2(Vector2 *v) : x(v->x), y(v->y) {}
     ~Vector2() {}
 
-    float getX()
-    {
-        return x;
-    }
+    float getX() { return x; }
+    float getY() { return y; }
+    void setX(float x) { this->x = x; }
+    void setY(float y) { this->y = y; }
 
-    float getY()
-    {
-        return y;
-    }
-
-    void setX(float x)
-    {
-        this->x = x;
-    }
-
-    void setY(float y)
-    {
-        this->y = y;
-    }
-
-    float norm()
-    {
-        return sqrt(x * x + y * y);
-    }
-
-    float dot(Vector2 r)
-    {
-        return x * r.x + y * r.y;
-    }
-
-    Vector2 dot_scalar(float u)
-    {
-        return Vector2(x * u, y * u);
-    }
-
-    float cross(Vector2 r)
-    {
-        return (x * r.y) - (y * r.x);
-    }
-
-    Vector2 negate()
-    {
-        return Vector2(-x, -y);
-    }
+    float norm() { return sqrt(x * x + y * y); }
+    float dot(Vector2 r) { return x * r.x + y * r.y; }
+    Vector2 dot_scalar(float u) { return Vector2(x * u, y * u); }
+    float cross(Vector2 r) { return (x * r.y) - (y * r.x); }
+    Vector2 negate() { return Vector2(-x, -y); }
 };
 
-Point2 Point2::add(Vector2 p)
-{
-    return Point2(this->x - p.x, this->y - p.y);
-}
-
-Vector2 Point2::sub(Point2 p)
-{
-    return Vector2(this->x - p.x, this->y - p.y);
-}
+Point2 Point2::add(Vector2 p) { return Point2(this->x + p.x, this->y + p.y); }
+Vector2 Point2::sub(Point2 p) { return Vector2(this->x - p.x, this->y - p.y); }
 
 class Segment2
 {
@@ -108,24 +68,14 @@ public:
     Point2 origin;
     Vector2 direction;
 
-    Segment2(Point2 origin = (Point2(0, 0)), Vector2 direction = (Vector2(0, 0))) : origin(origin), direction(direction) {}
-
+    Segment2() : origin(Point2(0, 0)), direction(Vector2(0, 0)) {}
+    Segment2(Point2 origin, Vector2 direction) : origin(origin), direction(direction) {}
+    Segment2(Segment2 *s) : origin(s->origin), direction(s->direction) {}
     ~Segment2() {}
 
-    Point2 getOrigin()
-    {
-        return origin;
-    }
-
-    Vector2 getDirection()
-    {
-        return direction;
-    }
-
-    float Length()
-    {
-        return direction.norm();
-    }
+    Point2 getOrigin() { return origin; }
+    Vector2 getDirection() { return direction; }
+    float Length() { return direction.norm(); }
 
     IntersectionStatus intersect(Segment2 r, Point2 p)
     {
@@ -186,24 +136,19 @@ public:
                 status = PARALLEL_NON_INTERSECTING;
             }
         }
-
         return status;
     }
 };
 
-main(void)
+int main(void)
 {
-    Point2 o1(1, 4);
-    Point2 o2(3, 8);
+    Point2 p1(0., 0.);
+    Point2 p2(1., 2.);
+    Vector2 v1(1., 1.);
+    Vector2 v2(2., 4.);
+    Segment2 s1(p1, v1);
+    Segment2 s2(p2, v2);
 
-    Vector2 d1(2, -8);
-    Vector2 d2(-2, 6);
-
-    Segment2 s1(o1, d1);
-    Segment2 s2(o2, d2);
-
-    Point2 satan(7, -2);
-
-    cout << s1.intersect(s2, satan) << endl;
+    cout << s1.intersect(s2, p1) << endl;
     return 1;
 }
